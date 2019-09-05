@@ -24,6 +24,7 @@ using Microsoft.Bot.Builder.Solutions.Proactive;
 using Microsoft.Bot.Builder.Solutions.Responses;
 using Microsoft.Bot.Connector;
 using Microsoft.Bot.Schema;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace CalendarSkill.Dialogs
 {
@@ -48,6 +49,7 @@ namespace CalendarSkill.Dialogs
             TimeRemainingDialog timeRemainingDialog,
             SummaryDialog summaryDialog,
             UpdateEventDialog updateEventDialog,
+            CalendarSummaryDialog calendarSummaryDialog,
             ConnectToMeetingDialog connectToMeetingDialog,
             UpcomingEventDialog upcomingEventDialog,
             IBotTelemetryClient telemetryClient)
@@ -71,6 +73,7 @@ namespace CalendarSkill.Dialogs
             AddDialog(updateEventDialog ?? throw new ArgumentNullException(nameof(updateEventDialog)));
             AddDialog(connectToMeetingDialog ?? throw new ArgumentNullException(nameof(connectToMeetingDialog)));
             AddDialog(upcomingEventDialog ?? throw new ArgumentNullException(nameof(upcomingEventDialog)));
+            AddDialog(calendarSummaryDialog ?? throw new ArgumentNullException(nameof(calendarSummaryDialog)));
         }
 
         protected override async Task OnStartAsync(DialogContext dc, CancellationToken cancellationToken = default(CancellationToken))
@@ -245,6 +248,7 @@ namespace CalendarSkill.Dialogs
                         {
                             var response = dc.Context.Activity.CreateReply();
                             response.Type = ActivityTypes.EndOfConversation;
+                            response.SemanticAction = result.Result as SemanticAction;
 
                             await dc.Context.SendActivityAsync(response);
                         }
@@ -255,6 +259,13 @@ namespace CalendarSkill.Dialogs
                 case Events.DeviceStart:
                     {
                         await dc.BeginDialogAsync(nameof(UpcomingEventDialog));
+                        break;
+                    }
+
+                case Events.SummaryEvent:
+                    {
+                        var state = await _stateAccessor.GetAsync(dc.Context, () => new CalendarSkillState());
+                        await dc.BeginDialogAsync(nameof(CalendarSummaryDialog));
                         break;
                     }
             }
@@ -374,6 +385,7 @@ namespace CalendarSkill.Dialogs
         private class Events
         {
             public const string DeviceStart = "DeviceStart";
+            public const string SummaryEvent = "VA.Summary";
         }
     }
 }
