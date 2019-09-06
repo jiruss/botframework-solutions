@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using HospitalitySkill.Models;
@@ -77,7 +79,7 @@ namespace HospitalitySkill.Dialogs
                 // items identified without specified quantity
                 for (int i = 0; i < entities.Item.Length; i++)
                 {
-                    var itemRequest = new ItemRequestClass { Item = new string[] { entities.Item[i] } };
+                    var itemRequest = new ItemRequestClass { Item = new string[] { entities.Item[i] }, number = new double[] { 1 } };
                     convState.ItemList.Add(itemRequest);
                 }
             }
@@ -94,7 +96,7 @@ namespace HospitalitySkill.Dialogs
                 // handle if item not recognized as entity
                 if (convState.ItemList.Count == 0 && (numWords == 1 || numWords == 2))
                 {
-                    var itemRequest = new ItemRequestClass { Item = new string[] { promptContext.Recognized.Value } };
+                    var itemRequest = new ItemRequestClass { Item = new string[] { promptContext.Recognized.Value }, number = new double[] { 1 } };
                     convState.ItemList.Add(itemRequest);
                 }
 
@@ -116,7 +118,7 @@ namespace HospitalitySkill.Dialogs
 
             foreach (var itemRequest in convState.ItemList.ToList())
             {
-                var roomItem = _hotelService.CheckRoomItemAvailability(itemRequest.Item[0]);
+                var roomItem = _hotelService.CheckRoomItemAvailability(itemRequest.Item[0], (int)itemRequest.number[0]);
 
                 if (roomItem == null)
                 {
@@ -126,17 +128,25 @@ namespace HospitalitySkill.Dialogs
                 }
                 else
                 {
-                    itemRequest.Item[0] = roomItem.Item;
+                    itemRequest.Item[0] = itemRequest.number[0] > 1 ? roomItem.ItemPlural : roomItem.Item;
                 }
             }
 
             if (notAvailable.Count > 0)
             {
-                var reply = ResponseManager.GetResponse(RequestItemResponses.ItemNotAvailable).Text;
+                var sb = new StringBuilder();
+
                 foreach (var itemRequest in notAvailable)
                 {
-                    reply += Environment.NewLine + "- " + itemRequest.Item[0];
+                    sb.Append($"{Environment.NewLine}- {itemRequest.Item[0]}");
                 }
+
+                var tokens = new StringDictionary
+                {
+                    { "Items", sb.ToString() }
+                };
+
+                var reply = ResponseManager.GetResponse(RequestItemResponses.ItemNotAvailable, tokens);
 
                 await sc.Context.SendActivityAsync(reply);
                 return await sc.PromptAsync(DialogIds.GuestServicesPrompt, new PromptOptions()
@@ -187,8 +197,12 @@ namespace HospitalitySkill.Dialogs
                 await _hotelService.RequestItems(convState.ItemList);
 
                 // if at least one item was available send this card reply
-                await sc.Context.SendActivityAsync(ResponseManager.GetCardResponse(null, new Card(GetCardName(sc.Context, "RequestItemCard")), null, "items", roomItems));
-                await sc.Context.SendActivityAsync(ResponseManager.GetResponse(RequestItemResponses.ItemsRequested));
+                var tokens = new StringDictionary
+                {
+                    { "Items", GetCombinedList(roomItems, (item) => { return $"{((RoomItem)item.Data).Quantity} {((RoomItem)item.Data).Item}"; }) }
+                };
+
+                await sc.Context.SendActivityAsync(ResponseManager.GetCardResponse(RequestItemResponses.ItemsRequested, new Card(GetCardName(sc.Context, "RequestItemCard")), tokens, "items", roomItems));
             }
 
             return await sc.EndDialogAsync();

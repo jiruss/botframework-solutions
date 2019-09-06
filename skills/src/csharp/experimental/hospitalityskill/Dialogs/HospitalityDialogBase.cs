@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using HospitalitySkill.Models;
@@ -205,6 +206,29 @@ namespace HospitalitySkill.Dialogs
             }
 
             return name;
+        }
+
+        protected string GetCombinedList<T>(IList<T> list, Func<T, string> func)
+        {
+            var sb = new StringBuilder();
+            for (int i = 0; i < list.Count; ++i)
+            {
+                if (list.Count > 1)
+                {
+                    if (i == list.Count - 1)
+                    {
+                        sb.Append(" and ");
+                    }
+                    else if (i >= 1)
+                    {
+                        sb.Append(", ");
+                    }
+                }
+
+                sb.Append(func(list[i]));
+            }
+
+            return sb.ToString();
         }
     }
 }

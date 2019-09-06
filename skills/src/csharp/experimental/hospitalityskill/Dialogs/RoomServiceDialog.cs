@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -62,29 +63,30 @@ namespace HospitalitySkill.Dialogs
             {
                 var prompt = ResponseManager.GetResponse(RoomServiceResponses.MenuPrompt).Text;
 
-
                 var actions = new List<CardAction>()
-                    {
-                       new CardAction(type: ActionTypes.ImBack, title: "Breakfast", value: "Breakfast menu"),
-                       new CardAction(type: ActionTypes.ImBack, title: "Lunch", value: "Lunch menu"),
-                       new CardAction(type: ActionTypes.ImBack, title: "Dinner", value: "Dinner menu"),
-                       new CardAction(type: ActionTypes.ImBack, title: "24 Hour", value: "24 hour menu")
+                {
+                    new CardAction(type: ActionTypes.ImBack, title: "Breakfast", value: "Breakfast menu"),
+                    new CardAction(type: ActionTypes.ImBack, title: "Lunch", value: "Lunch menu"),
+                    new CardAction(type: ActionTypes.ImBack, title: "Dinner", value: "Dinner menu"),
+                    new CardAction(type: ActionTypes.ImBack, title: "24 Hour", value: "24 hour menu")
                 };
 
-                var activity = MessageFactory.SuggestedActions(actions, prompt);
+                var activity = MessageFactory.SuggestedActions(actions, prompt, prompt);
 
                 // create hero card instead when channel does not support suggested actions
                 if (!Channel.SupportsSuggestedActions(sc.Context.Activity.ChannelId))
                 {
                     var hero = new HeroCard(buttons: actions);
-                    activity = MessageFactory.Attachment(hero.ToAttachment(), prompt);
+                    activity = MessageFactory.Attachment(hero.ToAttachment(), prompt, prompt);
                 }
 
-                return await sc.PromptAsync(DialogIds.MenuPrompt, new PromptOptions()
+                var options = new PromptOptions()
                 {
                     Prompt = (Activity)activity,
                     RetryPrompt = ResponseManager.GetResponse(RoomServiceResponses.ChooseOneMenu)
-                });
+                };
+
+                return await sc.PromptAsync(DialogIds.MenuPrompt, options);
             }
 
             return await sc.NextAsync();
@@ -128,12 +130,16 @@ namespace HospitalitySkill.Dialogs
                 }
 
                 // show menu card
-                await sc.Context.SendActivityAsync(ResponseManager.GetCardResponse(null, new Card(GetCardName(sc.Context, "MenuCard"), menu), null, "items", menuItems));
+                var tokens = new StringDictionary
+                {
+                    { "Menu", menu.Type },
+                    { "Foods", GetCombinedList(menu.Items, item => { return $"{item.Name} for ${item.Price}"; }) }
+                };
 
                 // prompt for order
                 return await sc.PromptAsync(DialogIds.FoodOrderPrompt, new PromptOptions()
                 {
-                    Prompt = ResponseManager.GetResponse(RoomServiceResponses.FoodOrder),
+                    Prompt = ResponseManager.GetCardResponse(RoomServiceResponses.FoodOrder, new Card(GetCardName(sc.Context, "MenuCard"), menu), tokens, "items", menuItems),
                     RetryPrompt = ResponseManager.GetResponse(RoomServiceResponses.RetryFoodOrder)
                 });
             }
@@ -162,6 +168,7 @@ namespace HospitalitySkill.Dialogs
             // ask if they want to add more items
             return await sc.PromptAsync(DialogIds.AddMore, new PromptOptions()
             {
+                // TODO do not handle yes..
                 Prompt = ResponseManager.GetResponse(RoomServiceResponses.AddMore)
             });
         }
@@ -223,7 +230,7 @@ namespace HospitalitySkill.Dialogs
             foreach (var foodRequest in convState.FoodList.ToList())
             {
                 // get full name of requested item and check availability
-                var foodItem = _hotelService.CheckMenuItemAvailability(foodRequest.Food[0]);
+                var foodItem = _hotelService.CheckMenuItemAvailability(foodRequest.Food[0], (int)foodRequest.number[0]);
 
                 if (foodItem == null)
                 {
@@ -243,6 +250,11 @@ namespace HospitalitySkill.Dialogs
                     SpecialRequest = foodRequest.SpecialRequest == null ? null : foodRequest.SpecialRequest[0]
                 };
 
+                if (foodItemData.Quantity > 1)
+                {
+                    foodItemData.Name = foodItem.NamePlural;
+                }
+
                 foodItems.Add(new Card(GetCardName(turnContext, "FoodItemCard"), foodItemData));
 
                 // add up bill
@@ -257,7 +269,20 @@ namespace HospitalitySkill.Dialogs
 
             if (convState.FoodList.Count > 0)
             {
-                await turnContext.SendActivityAsync(ResponseManager.GetCardResponse(null, new Card(GetCardName(turnContext, "FoodOrderCard"), totalFoodOrder), null, "items", foodItems));
+                var tokens = new StringDictionary
+                {
+                    { "BillTotal", $"${totalFoodOrder.BillTotal}" },
+                    {
+                        "Foods",
+                        GetCombinedList(foodItems, item =>
+                        {
+                            var data = item.Data as FoodOrderData;
+                            return $"{data.Quantity} {data.Name}";
+                        })
+                    }
+                };
+
+                await turnContext.SendActivityAsync(ResponseManager.GetCardResponse(RoomServiceResponses.CurrentFoodOrder, new Card(GetCardName(turnContext, "FoodOrderCard"), totalFoodOrder), tokens, "items", foodItems));
             }
         }
 
@@ -277,7 +302,7 @@ namespace HospitalitySkill.Dialogs
                 // food without quantity or special request
                 for (int i = 0; i < entities.Food.Length; i++)
                 {
-                    var foodRequest = new FoodRequestClass { Food = new string[] { entities.Food[i] } };
+                    var foodRequest = new FoodRequestClass { Food = new string[] { entities.Food[i] }, number = new double[] { 1 } };
                     convState.FoodList.Add(foodRequest);
                 }
             }
