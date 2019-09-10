@@ -42,6 +42,8 @@ namespace HospitalitySkill.Dialogs
             AddDialog(new WaterfallDialog(nameof(RequestItemDialog), requestItem));
             AddDialog(new TextPrompt(DialogIds.ItemPrompt, ValidateItemPrompt));
             AddDialog(new ConfirmPrompt(DialogIds.GuestServicesPrompt, ValidateGuestServicesPrompt));
+
+            ThisIntent = Luis.HospitalityLuis.Intent.RequestItem;
         }
 
         private async Task<DialogTurnResult> ItemPrompt(WaterfallStepContext sc, CancellationToken cancellationToken)

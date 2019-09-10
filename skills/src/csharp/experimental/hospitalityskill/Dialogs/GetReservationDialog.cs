@@ -34,6 +34,8 @@ namespace HospitalitySkill.Dialogs
             _hotelService = hotelService;
 
             AddDialog(new WaterfallDialog(nameof(GetReservationDialog), getReservation));
+
+            ThisIntent = Luis.HospitalityLuis.Intent.GetReservationDetails;
         }
 
         private async Task<DialogTurnResult> ShowReservation(WaterfallStepContext sc, CancellationToken cancellationToken)

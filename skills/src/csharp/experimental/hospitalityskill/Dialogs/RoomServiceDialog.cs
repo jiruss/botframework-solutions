@@ -48,6 +48,8 @@ namespace HospitalitySkill.Dialogs
             AddDialog(new TextPrompt(DialogIds.AddMore, ValidateAddItems));
             AddDialog(new ConfirmPrompt(DialogIds.ConfirmOrder));
             AddDialog(new TextPrompt(DialogIds.FoodOrderPrompt, ValidateFoodOrder));
+
+            ThisIntent = Luis.HospitalityLuis.Intent.RoomService;
         }
 
         private async Task<DialogTurnResult> MenuPrompt(WaterfallStepContext sc, CancellationToken cancellationToken)
