@@ -41,6 +41,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HospitalitySkill", "experim
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicSkill", "experimental\musicskill\MusicSkill.csproj", "{A2ECB4BF-FD59-4746-B699-F1C326D561BB}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Builder.Skills", "..\..\..\lib\csharp\microsoft.bot.builder.skills\Microsoft.Bot.Builder.Skills\Microsoft.Bot.Builder.Skills.csproj", "{E6DA1291-71A6-4C2F-A088-ABC5A3E806BA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Builder.Solutions", "..\..\..\lib\csharp\microsoft.bot.builder.solutions\microsoft.bot.builder.solutions\Microsoft.Bot.Builder.Solutions.csproj", "{F7861FBF-EA29-4F3A-8B4B-B208E987B4CC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug - NuGet Packages|Any CPU = Debug - NuGet Packages|Any CPU
@@ -177,6 +181,22 @@ Global
 		{A2ECB4BF-FD59-4746-B699-F1C326D561BB}.Documentation|Any CPU.Build.0 = Debug|Any CPU
 		{A2ECB4BF-FD59-4746-B699-F1C326D561BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2ECB4BF-FD59-4746-B699-F1C326D561BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6DA1291-71A6-4C2F-A088-ABC5A3E806BA}.Debug - NuGet Packages|Any CPU.ActiveCfg = Debug - NuGet Packages|Any CPU
+		{E6DA1291-71A6-4C2F-A088-ABC5A3E806BA}.Debug - NuGet Packages|Any CPU.Build.0 = Debug - NuGet Packages|Any CPU
+		{E6DA1291-71A6-4C2F-A088-ABC5A3E806BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6DA1291-71A6-4C2F-A088-ABC5A3E806BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6DA1291-71A6-4C2F-A088-ABC5A3E806BA}.Documentation|Any CPU.ActiveCfg = Documentation|Any CPU
+		{E6DA1291-71A6-4C2F-A088-ABC5A3E806BA}.Documentation|Any CPU.Build.0 = Documentation|Any CPU
+		{E6DA1291-71A6-4C2F-A088-ABC5A3E806BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6DA1291-71A6-4C2F-A088-ABC5A3E806BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7861FBF-EA29-4F3A-8B4B-B208E987B4CC}.Debug - NuGet Packages|Any CPU.ActiveCfg = Debug - NuGet Packages|Any CPU
+		{F7861FBF-EA29-4F3A-8B4B-B208E987B4CC}.Debug - NuGet Packages|Any CPU.Build.0 = Debug - NuGet Packages|Any CPU
+		{F7861FBF-EA29-4F3A-8B4B-B208E987B4CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7861FBF-EA29-4F3A-8B4B-B208E987B4CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7861FBF-EA29-4F3A-8B4B-B208E987B4CC}.Documentation|Any CPU.ActiveCfg = Documentation|Any CPU
+		{F7861FBF-EA29-4F3A-8B4B-B208E987B4CC}.Documentation|Any CPU.Build.0 = Documentation|Any CPU
+		{F7861FBF-EA29-4F3A-8B4B-B208E987B4CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7861FBF-EA29-4F3A-8B4B-B208E987B4CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
