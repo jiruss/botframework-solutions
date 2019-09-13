@@ -77,7 +77,7 @@ namespace $safeprojectname$.Dialogs
         protected override async Task RouteAsync(DialogContext dc, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Get cognitive models for locale
-            var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+            var locale = CultureInfo.CurrentUICulture.Name.ToLower();
             var cognitiveModels = _services.CognitiveModelSets[locale];
 
             // Check dispatch result
@@ -294,8 +294,8 @@ namespace $safeprojectname$.Dialogs
             if (dc.Context.Activity.Type == ActivityTypes.Message && !string.IsNullOrWhiteSpace(dc.Context.Activity.Text))
             {
                 // get current activity locale
-                var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
-                var cognitiveModels = _services.CognitiveModelSets[locale];
+                var locale = CultureInfo.CurrentUICulture.Name.ToLower();
+            var cognitiveModels = _services.CognitiveModelSets[locale];
 
                 // check luis intent
                 cognitiveModels.LuisServices.TryGetValue("General", out var luisService);
