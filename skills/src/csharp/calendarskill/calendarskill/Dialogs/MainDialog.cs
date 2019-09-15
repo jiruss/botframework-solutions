@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,7 +15,6 @@ using Luis;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
-using Microsoft.Bot.Builder.Skills;
 using Microsoft.Bot.Builder.Skills.Models;
 using Microsoft.Bot.Builder.Solutions;
 using Microsoft.Bot.Builder.Solutions.Dialogs;
@@ -47,10 +45,10 @@ namespace CalendarSkill.Dialogs
             CreateEventDialog createEventDialog,
             ChangeEventStatusDialog changeEventStatusDialog,
             TimeRemainingDialog timeRemainingDialog,
-            SummaryDialog summaryDialog,
+            ShowEventsDialog summaryDialog,
             UpdateEventDialog updateEventDialog,
+            JoinEventDialog connectToMeetingDialog,
             CalendarSummaryDialog calendarSummaryDialog,
-            ConnectToMeetingDialog connectToMeetingDialog,
             UpcomingEventDialog upcomingEventDialog,
             IBotTelemetryClient telemetryClient)
             : base(nameof(MainDialog), telemetryClient)
@@ -143,7 +141,7 @@ namespace CalendarSkill.Dialogs
 
                     case CalendarLuis.Intent.ConnectToMeeting:
                         {
-                            turnResult = await dc.BeginDialogAsync(nameof(ConnectToMeetingDialog), options);
+                            turnResult = await dc.BeginDialogAsync(nameof(JoinEventDialog), options);
                             break;
                         }
 
@@ -154,7 +152,7 @@ namespace CalendarSkill.Dialogs
                     case CalendarLuis.Intent.FindCalendarWho:
                     case CalendarLuis.Intent.FindDuration:
                         {
-                            turnResult = await dc.BeginDialogAsync(nameof(SummaryDialog));
+                            turnResult = await dc.BeginDialogAsync(nameof(ShowEventsDialog), new ShowMeetingsDialogOptions(ShowMeetingsDialogOptions.ShowMeetingReason.FirstShowOverview, options));
                             break;
                         }
 
@@ -167,7 +165,7 @@ namespace CalendarSkill.Dialogs
                     case CalendarLuis.Intent.ShowNextCalendar:
                     case CalendarLuis.Intent.ShowPreviousCalendar:
                         {
-                            turnResult = await dc.BeginDialogAsync(nameof(SummaryDialog));
+                            turnResult = await dc.BeginDialogAsync(nameof(ShowEventsDialog), new ShowMeetingsDialogOptions(ShowMeetingsDialogOptions.ShowMeetingReason.FirstShowOverview, options));
                             break;
                         }
 
@@ -175,7 +173,7 @@ namespace CalendarSkill.Dialogs
                         {
                             if (generalTopIntent == General.Intent.ShowNext || generalTopIntent == General.Intent.ShowPrevious)
                             {
-                                turnResult = await dc.BeginDialogAsync(nameof(SummaryDialog));
+                                turnResult = await dc.BeginDialogAsync(nameof(ShowEventsDialog), new ShowMeetingsDialogOptions(ShowMeetingsDialogOptions.ShowMeetingReason.FirstShowOverview, options));
                             }
                             else
                             {
@@ -202,29 +200,13 @@ namespace CalendarSkill.Dialogs
             }
         }
 
-        private async Task PopulateStateFromSemanticAction(ITurnContext context)
-        {
-            var activity = context.Activity;
-            var semanticAction = activity.SemanticAction;
-            if (semanticAction != null && semanticAction.Entities.ContainsKey("timezone"))
-            {
-                var timezone = semanticAction.Entities["timezone"];
-                var timezoneObj = timezone.Properties["timezone"].ToObject<TimeZoneInfo>();
-
-                var state = await _stateAccessor.GetAsync(context, () => new CalendarSkillState());
-
-                // we have a timezone
-                state.UserInfo.Timezone = timezoneObj;
-            }
-        }
-
         protected override async Task CompleteAsync(DialogContext dc, DialogTurnResult result = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // workaround. if connect skill directly to teams, the following response does not work.
             if (dc.Context.Adapter is IRemoteUserTokenProvider remoteInvocationAdapter || Channel.GetChannelId(dc.Context) != Channels.Msteams)
             {
                 var response = dc.Context.Activity.CreateReply();
-                response.Type = ActivityTypes.EndOfConversation;
+                response.Type = ActivityTypes.Handoff;
 
                 await dc.Context.SendActivityAsync(response);
             }
@@ -247,7 +229,7 @@ namespace CalendarSkill.Dialogs
                         if (result.Status != DialogTurnStatus.Waiting)
                         {
                             var response = dc.Context.Activity.CreateReply();
-                            response.Type = ActivityTypes.EndOfConversation;
+                            response.Type = ActivityTypes.Handoff;
                             response.SemanticAction = result.Result as SemanticAction;
 
                             await dc.Context.SendActivityAsync(response);
@@ -328,6 +310,22 @@ namespace CalendarSkill.Dialogs
             }
 
             return result;
+        }
+
+        private async Task PopulateStateFromSemanticAction(ITurnContext context)
+        {
+            var activity = context.Activity;
+            var semanticAction = activity.SemanticAction;
+            if (semanticAction != null && semanticAction.Entities.ContainsKey("timezone"))
+            {
+                var timezone = semanticAction.Entities["timezone"];
+                var timezoneObj = timezone.Properties["timezone"].ToObject<TimeZoneInfo>();
+
+                var state = await _stateAccessor.GetAsync(context, () => new CalendarSkillState());
+
+                // we have a timezone
+                state.UserInfo.Timezone = timezoneObj;
+            }
         }
 
         private async Task<InterruptionAction> OnCancel(DialogContext dc)

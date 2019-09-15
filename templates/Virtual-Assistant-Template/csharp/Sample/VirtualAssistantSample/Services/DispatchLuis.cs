@@ -19,10 +19,6 @@ namespace Luis
             l_General,
             q_Chitchat,
             q_Faq,
-            toDoSkill,
-            pointOfInterestSkill,
-            calendarSkill,
-            emailSkill,
             None
         };
         public Dictionary<Intent, IntentScore> Intents;

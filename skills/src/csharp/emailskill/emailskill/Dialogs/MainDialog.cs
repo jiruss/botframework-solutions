@@ -215,7 +215,7 @@ namespace EmailSkill.Dialogs
             if (dc.Context.Adapter is IRemoteUserTokenProvider remoteInvocationAdapter || Channel.GetChannelId(dc.Context) != Channels.Msteams)
             {
                 var response = dc.Context.Activity.CreateReply();
-                response.Type = ActivityTypes.EndOfConversation;
+                response.Type = ActivityTypes.Handoff;
 
                 await dc.Context.SendActivityAsync(response);
             }
@@ -238,9 +238,8 @@ namespace EmailSkill.Dialogs
                         if (result.Status != DialogTurnStatus.Waiting)
                         {
                             var response = dc.Context.Activity.CreateReply();
-                            response.Type = ActivityTypes.EndOfConversation;
+                            response.Type = ActivityTypes.Handoff;
                             response.SemanticAction = result.Result as SemanticAction;
-
                             await dc.Context.SendActivityAsync(response);
                         }
 
