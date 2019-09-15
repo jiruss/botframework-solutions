@@ -178,7 +178,7 @@ namespace ToDoSkill.Dialogs
                         {
                             var response = dc.Context.Activity.CreateReply();
                             response.Type = ActivityTypes.Handoff;
-                            response.Type = ActivityTypes.EndOfConversation;
+                            response.SemanticAction = result.Result as SemanticAction;
                             await dc.Context.SendActivityAsync(response);
                         }
 
@@ -322,7 +322,7 @@ namespace ToDoSkill.Dialogs
 
         private class Events
         {
-            public const string SummaryEvent = "summaryEvent";
+            public const string SummaryEvent = "SummaryEvent";
         }
     }
 }
