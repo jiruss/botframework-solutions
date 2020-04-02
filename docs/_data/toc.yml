@@ -1,15 +1,27 @@
 Overview:
-Tutorials:
-- Create a Virtual Assistant
-- Customize a Virtual Assistant
-- Create a skill
-- Customize a skill
-- Enable Speech
-- Enable Microsoft Teams
-How To:
-- Virtual Assistant
-- Skills
-Reference:
-- Virtual Assistant
-- Skills
-- Analytics
+- What's New
+Virtual Assistant:
+- Create
+- Customize
+- Deploy
+- Handbook
+Skills:
+- Create
+- Customize
+- Connect to a sample
+- Add action support
+- Handbook
+- Samples
+Solution Accelerators:
+- Assistants
+- Samples
+- Enable continuous integration
+- Enable continuous deployment
+- Enable proactive notifications
+- View analytics with Power BI
+Clients and Channels:
+- Clients
+- Channels
+- Extend to Direct Line Speech
+- Extend to Microsoft Teams
+Help:

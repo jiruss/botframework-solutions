@@ -2,23 +2,18 @@
 
 This repository is the home for a set of templates and solutions to help build conversational experiences using [Azure Bot Service](https://aka.ms/azurebotservice) and [Bot Framework](https://botframework.com).
 
-> Things look a little different around here? Find out more in our [Wiki page](https://github.com/Microsoft/AI/wiki/What's-new-at-Build-2019) and [here](https://github.com/Microsoft/AI/issues/959).
-
-### [Click here to find out what's new for Bot Framework](https://github.com/microsoft/botframework/blob/master/whats-new.md#whats-new)
-
 | Name | Description |  
 |:------------:|------------| 
-|[<img src="https://raw.githubusercontent.com/Microsoft/AI/4.4/docs/media/vatemplateintrocard.png" width="1250">](https://microsoft.github.io/botframework-solutions/overview/virtualassistant/) | [**Virtual Assistant (Preview).**](https://microsoft.github.io/botframework-solutions/overview/virtualassistant/) Customers and partners have a significant need to deliver a conversational assistant tailored to their brand, personalized to their users, and made available across a broad range of canvases and devices. <br/><br/>  This brings together all of the supporting components and greatly simplifies the creation of a new bot project including: basic conversational intents, Dispatch integration, QnA Maker, Application Insights and an automated deployment.|
-|[<img src="https://raw.githubusercontent.com/Microsoft/AI/4.4/docs/media/calendarskillcardexample.png" width="1250">](https://microsoft.github.io/botframework-solutions/overview/skills/)| [**Skills (Preview).**](https://microsoft.github.io/botframework-solutions/overview/skills/) A library of re-usable conversational skill building-blocks enabling you to add functionality to a Bot. We currently provide: Calendar, Email, Task, Point of Interest, Automotive, Weather and News skills. Skills include LUIS models, Dialogs, and integration code delivered in source code form to customize and extend as required.|
-|[<img src="https://raw.githubusercontent.com/Microsoft/AI/4.4/docs/media/powerbi-conversationanalytics-luisintents.png" width="1250">](https://microsoft.github.io/botframework-solutions/overview/analytics/)| [**Analytics.**](https://microsoft.github.io/botframework-solutions/overview/analytics/) Gain key insights into your bot’s health and behavior with the Bot Framework Analytics solutions, which includes: sample Application Insights queries, and Power BI dashboards to understand the full breadth of your bot’s conversations with users.|
+|[<img src="https://github.com/microsoft/botframework-solutions/blob/master/docs/assets/images/icons/virtual-assistant.png" width="48"><br/> **Virtual Assistant (Preview)**](https://microsoft.github.io/botframework-solutions/overview/virtual-assistant-solution/) | Customers and partners have a significant need to deliver a conversational assistant tailored to their brand, personalized to their users, and made available across a broad range of canvases and devices. <br/><br/>  This brings together all of the supporting components and greatly simplifies the creation of a new bot project including: basic conversational intents, Dispatch integration, QnA Maker, Application Insights and an automated deployment.|
+|[<img src="https://github.com/microsoft/botframework-solutions/blob/master/docs/assets/images/icons/skill.png" width="48"> <br/> **Skills (Preview).**](https://microsoft.github.io/botframework-solutions/overview/skills/)| **Important**: The sample Skill code is migrating to the [Bot Framework Skills repository](https://www.github.com/microsoft/botframework-skills). The source code here will be removed in the next release.<br/><br/>Extend your assistant with reusable conversational Skills to add common functionality such as collection of re-usable conversational skills enabling you to add functionality to a Virtual Assistant. Try the sample Skills available like Calendar, Email, To Do, Point of Interest, and more. |
+|[<img src="https://github.com/microsoft/botframework-solutions/blob/master/docs/assets/images/icons/bi-dashboard.png" width="48"> <br/> **Analytics**](https://microsoft.github.io/botframework-solutions/solution-accelerators/tutorials/view-analytics/1-intro)| Gain key insights into your assistant’s health and behavior with the Bot Framework Analytics solutions, which includes: sample Application Insights queries and Power BI dashboards to understand the full breadth of your assistant's conversations with users.|
 
 ## Packages
 
 ### .NET
-| Name | Released Package |Daily Build |
+| Name | Released Package | Daily Build |
 |---|---|---|
-| Microsoft.Bot.Builder.Solutions (Preview)                | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.Bot.Builder.Solutions?dWidth=70)](https://www.nuget.org/packages/Microsoft.Bot.Builder.Solutions/)                                 | [![BotBuilder Badge](https://buildstats.info/myget/botbuilder/aitemplates/Microsoft.Bot.Builder.Solutions?includePreReleases=true&dWidth=50)](https://botbuilder.myget.org/feed/aitemplates/package/nuget/Microsoft.Bot.Builder.Solutions) |
-| Microsoft.Bot.Builder.Skills (Preview)                | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.Bot.Builder.Skills?dWidth=70)](https://www.nuget.org/packages/Microsoft.Bot.Builder.Skills/)                                 | [![BotBuilder Badge](https://buildstats.info/myget/botbuilder/aitemplates/Microsoft.Bot.Builder.Skills?includePreReleases=true&dWidth=50)](https://botbuilder.myget.org/feed/aitemplates/package/nuget/Microsoft.Bot.Builder.Skills) |
+| Microsoft.Bot.Solutions (Preview) | [![Microsoft.Bot.Solutions Badge](https://buildstats.info/nuget/Microsoft.Bot.Solutions?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.Bot.Solutions/) | [![BotBuilder Badge](https://buildstats.info/myget/botbuilder/aitemplates/Microsoft.Bot.Solutions?includePreReleases=true&dWidth=50)](https://botbuilder.myget.org/feed/aitemplates/package/nuget/Microsoft.Bot.Solutions) |
 
 ### JS
 
@@ -31,11 +26,10 @@ This repository is the home for a set of templates and solutions to help build c
 
 ## Need Help?
 
-If you have any questions please start with [Stack Overflow](https://stackoverflow.com/questions/tagged/botframework) where we're happy to help. Please use this GitHub Repos issue tracking capability to raise [issues](https://github.com/Microsoft/AI/issues/new?assignees=&labels=Type%3A+Bug&template=bug_report.md&title=) or [feature requests](https://github.com/Microsoft/AI/issues/new?assignees=&labels=Type%3A+Suggestion&template=feature_request.md&title=).
+If you have any questions please start with [Stack Overflow](https://stackoverflow.com/questions/tagged/botframework) where we're happy to help. Please use this GitHub Repos issue tracking capability to raise [issues](https://github.com/Microsoft/botframework-solutions/issues/new?assignees=&labels=Type%3A+Bug&template=bug_report.md&title=) or [feature requests](https://github.com/Microsoft/botframework-solutions/issues/new?assignees=&labels=Type%3A+Suggestion&template=feature_request.md&title=).
 
 ## Reporting Security Issues
 Security issues and bugs should be reported privately, via email, to the Microsoft Security Response Center (MSRC) at [secure@microsoft.com](mailto:secure@microsoft.com). You should receive a response within 24 hours. If for some reason you do not, please follow up via email to ensure we received your original message. Further information, including the [MSRC PGP](https://technet.microsoft.com/en-us/security/dn606155) key, can be found in the [Security TechCenter](https://technet.microsoft.com/en-us/security/default).
 
 ## License
 Copyright (c) Microsoft Corporation. All rights reserved.
-
